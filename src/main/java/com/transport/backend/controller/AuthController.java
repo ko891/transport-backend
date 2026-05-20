@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.transport.backend.model.Citoyen;
+import com.transport.backend.repository.CitoyenRepository;
 import com.transport.backend.service.AuthService;
 
 @RestController
@@ -18,6 +20,9 @@ public class AuthController {
     // Repository direct
     @Autowired
     private AuthService authService;
+    
+    @Autowired
+    private CitoyenRepository citoyenRepository;
 
     @PostMapping("/send-code")
     public ResponseEntity<?> sendCode(@RequestBody Map<String, String> body) {
@@ -75,4 +80,24 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-}
+    @PutMapping("/desactiver/{id}")
+    public ResponseEntity<?> desactiverCompte (@PathVariable Long id){
+    	try {
+    		return ResponseEntity.ok(authService.desactiverCompte(id));
+    	}catch (Exception e) {
+    		return ResponseEntity.badRequest().body(e.getMessage());
+    	}
+    }
+    	@PutMapping("/reactiver/{id}")
+    	public ResponseEntity<?> reactiverCompte( @PathVariable Long id) {
+    		Citoyen c = citoyenRepository.findById(id).orElseThrow(() -> new RuntimeException("Introuvable"));
+    		c.setActif(true);
+    		citoyenRepository.save(c);
+    		return ResponseEntity.ok("Compte réactivé");
+    	}
+    	@GetMapping("/hash")
+    	public String hash(@RequestParam String password) {
+    	    return new BCryptPasswordEncoder().encode(password);
+    	}
+    }
+

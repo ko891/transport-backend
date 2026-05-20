@@ -114,4 +114,11 @@ public class AuthService {
 		verificationCodeRepository.delete(vc);
 		return "Mot de passe réinitialisé avec succès";
 	}
+	public String desactiverCompte(Long id) {
+	    Citoyen citoyen = citoyenRepository.findById(id)
+	        .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+	    citoyen.setActif(false);
+	    citoyenRepository.save(citoyen);
+	    return "Compte désactivé avec succès";
+	}
 }

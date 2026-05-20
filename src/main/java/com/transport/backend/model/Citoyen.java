@@ -1,5 +1,6 @@
 package com.transport.backend.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,11 @@ public class Citoyen {
 	private String email;
 	private String motDePasse;
 	private String role;
+	
+	@Column(name = "actif") 
+	private boolean actif = true;
+	
+	
 	public long getId() {
 		return id;
 	}
@@ -55,6 +61,12 @@ public class Citoyen {
 	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+	public boolean isActif() {
+		return actif;
+	}
+	public void setActif(boolean actif) {
+		this.actif = actif;
 	}
 }
 
